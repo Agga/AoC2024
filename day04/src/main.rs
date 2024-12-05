@@ -8,8 +8,6 @@ pub struct Puzzle {
     field: Vec<char>,
 }
 
-// 140 * 140 = 19600
-
 impl Puzzle {
     pub fn new(input: &str) -> Self {
         let mut data = Vec::new();
@@ -48,96 +46,108 @@ impl Puzzle {
         self.height
     }
 
-    // <->
-    pub fn left_to_right(&self, x: i32, y: i32) -> bool {
-        return self.check(x + 0, y + 0, 'X')
-            && self.check(x + 1, y + 0, 'M')
-            && self.check(x + 2, y + 0, 'A')
-            && self.check(x + 3, y + 0, 'S');
+    pub fn xmas(&self, x: i32, y: i32, a: i32, b: i32) -> i32 {
+        let xmas = ['X', 'M', 'A', 'S'];
+        let result = (0..4)
+            .zip(xmas)
+            .all(|(i, c)| self.check(x + i * a, y + i * b, c));
+        if result {
+            1
+        } else {
+            0
+        }
     }
 
-    pub fn right_to_left(&self, x: i32, y: i32) -> bool {
-        return self.check(x - 0, y + 0, 'X')
-            && self.check(x - 1, y + 0, 'M')
-            && self.check(x - 2, y + 0, 'A')
-            && self.check(x - 3, y + 0, 'S');
+    // directional test functions
+    pub fn right(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, 1, 0);
     }
 
-    // ^-v
-    pub fn top_to_bottom(&self, x: i32, y: i32) -> bool {
-        return self.check(x + 0, y + 0, 'X')
-            && self.check(x + 0, y + 1, 'M')
-            && self.check(x + 0, y + 2, 'A')
-            && self.check(x + 0, y + 3, 'S');
+    pub fn left(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, -1, 0);
     }
 
-    pub fn bottom_to_top(&self, x: i32, y: i32) -> bool {
-        return self.check(x + 0, y - 0, 'X')
-            && self.check(x + 0, y - 1, 'M')
-            && self.check(x + 0, y - 2, 'A')
-            && self.check(x + 0, y - 3, 'S');
+    pub fn bottom(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, 0, 1);
     }
 
-    pub fn top_left_to_bottom_right(&self, x: i32, y: i32) -> bool {
-        return self.check(x + 0, y + 0, 'X')
-            && self.check(x + 1, y + 1, 'M')
-            && self.check(x + 2, y + 2, 'A')
-            && self.check(x + 3, y + 3, 'S');
+    pub fn top(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, 0, -1);
     }
 
-    pub fn bottom_right_to_top_left(&self, x: i32, y: i32) -> bool {
-        return self.check(x - 0, y - 0, 'X')
-            && self.check(x - 1, y - 1, 'M')
-            && self.check(x - 2, y - 2, 'A')
-            && self.check(x - 3, y - 3, 'S');
+    pub fn top_left(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, -1, -1);
     }
 
-    pub fn bottom_left_to_top_right(&self, x: i32, y: i32) -> bool {
-        return self.check(x + 0, y - 0, 'X')
-            && self.check(x + 1, y - 1, 'M')
-            && self.check(x + 2, y - 2, 'A')
-            && self.check(x + 3, y - 3, 'S');
+    pub fn top_right(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, 1, -1);
     }
 
-    pub fn top_right_to_bottom_left(&self, x: i32, y: i32) -> bool {
-        return self.check(x - 0, y + 0, 'X')
-            && self.check(x - 1, y + 1, 'M')
-            && self.check(x - 2, y + 2, 'A')
-            && self.check(x - 3, y + 3, 'S');
+    pub fn bottom_left(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, -1, 1);
     }
 
-    pub fn test(&self, x:i32, y:i32)-> bool{
-        return self.left_to_right(x, y)
-            || self.right_to_left( x, y )
-            || self.top_to_bottom( x, y )
-            || self.bottom_to_top( x, y )
-            || self.top_left_to_bottom_right( x, y )
-            || self.bottom_right_to_top_left( x, y )
-            || self.bottom_left_to_top_right( x, y )
-            || self.top_right_to_bottom_left( x, y );
+    pub fn bottom_right(&self, x: i32, y: i32) -> i32 {
+        return self.xmas(x, y, 1, 1);
     }
 
-    
+    pub fn test_part1(&self, x: i32, y: i32) -> i32 {
+        let mut result: i32 = 0;
 
+        result += self.left(x, y);
+        result += self.right(x, y);
+        result += self.top(x, y);
+        result += self.top_left(x, y);
+        result += self.top_right(x, y);
+        result += self.bottom(x, y);
+        result += self.bottom_left(x, y);
+        result += self.bottom_right(x, y);
+
+        result
+    }
+
+    pub fn test_part2(&self, x: i32, y: i32) -> i32 {
+        if self.check(x, y, 'A') {
+            // top left <-> bottom_right
+            let a = self.check(x - 1, y - 1, 'M') && self.check(x + 1, y + 1, 'S');
+            let b = self.check(x - 1, y - 1, 'S') && self.check(x + 1, y + 1, 'M');
+
+            // bottom_left <-> top_right
+            let c = self.check(x - 1, y + 1, 'M') && self.check(x + 1, y - 1, 'S');
+            let d = self.check(x - 1, y + 1, 'S') && self.check(x + 1, y - 1, 'M');
+
+            if (a || b) && (c || d) {
+                return 1;
+            }
+        }
+        0
+    }
 }
 
 fn do_part1(input: &String) -> i32 {
     let p = Puzzle::new(input);
 
     let mut result = 0;
-    for x in 0..p.width(){
-        for y in 0..p.height(){
-            if p.test( x, y ){
-                result += 1;
-            }
+    for x in 0..p.width() {
+        for y in 0..p.height() {
+            result += p.test_part1(x, y);
         }
     }
 
     result
 }
 
-fn do_part2(_input: &String) -> i32 {
-    0
+fn do_part2(input: &String) -> i32 {
+    let p = Puzzle::new(input);
+
+    let mut result = 0;
+    for x in 0..p.width() {
+        for y in 0..p.height() {
+            result += p.test_part2(x, y);
+        }
+    }
+
+    result
 }
 
 fn main() -> io::Result<()> {
