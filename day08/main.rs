@@ -58,7 +58,6 @@ struct Map {
     height: i32,
     data: Vec<Field>,
     antennas: HashMap<char, Vec<Vec2>>,
-    resonances: HashSet<Vec2>,
 }
 
 impl Map {
@@ -68,7 +67,6 @@ impl Map {
             height: i32::try_from(h).unwrap(),
             data: vec![Field::Empty; w * h],
             antennas: HashMap::new(),
-            resonances: HashSet::new(),
         }
     }
 
@@ -92,24 +90,19 @@ impl Map {
     }
 
     pub fn add_antenna(&mut self, pos: Vec2, c: char) {
-        if let Some(index) = self.index_form(&pos) {
+        if let Some(index) = self.index_from(&pos) {
             self.data[index] = Field::Antenna(c);
         }
         self.antennas.entry(c).or_default().push(pos);
     }
 
     pub fn add_resonance(&mut self, pos: &Vec2) {
-        if let Some(index) = self.index_form(&pos) {
-            self.data[index] = match self.data[index] {
-                Field::Antenna(_) => Field::Antenna('R'),
-                _ => Field::Resonance,
-            };
-
-            self.resonances.insert(*pos);
+        if let Some(index) = self.index_from(&pos) {
+            self.data[index] = Field::Resonance;
         }
     }
 
-    pub fn index_form(&self, pos: &Vec2) -> Option<usize> {
+    pub fn index_from(&self, pos: &Vec2) -> Option<usize> {
         if pos.x >= 0 && pos.x < self.width && pos.y >= 0 && pos.y < self.height {
             let index = usize::try_from(pos.y * self.width + pos.x).unwrap();
             return Some(index);
@@ -118,15 +111,11 @@ impl Map {
     }
 
     pub fn contains(&self, pos: &Vec2) -> bool {
-        self.index_form(&pos).is_some()
+        self.index_from(&pos).is_some()
     }
 
     pub fn antennas(&self) -> &HashMap<char, Vec<Vec2>> {
         &self.antennas
-    }
-
-    pub fn count_resonance(&self) -> usize {
-        self.resonances.len()
     }
 }
 
@@ -150,26 +139,32 @@ fn do_part1(input: &String) -> usize {
         }
     }
 
-    // TODO figure out how to not copy here
-    let antennas = map.antennas().clone();
-    for (_, points) in antennas {
-        for a in points.iter() {
-            for b in points.iter() {
+    let mut resonances = HashSet::new();
+    
+    for (_, points) in map.antennas() {
+        for &a in points {
+            for &b in points {
                 if a != b {
-                    // TODO why do i need to deref here?
-                    let resonance0: Vec2 = *a + *a - *b;
-                    let resonance1: Vec2 = *b + *b - *a;
+                    let resonance0: Vec2 = a + a - b;
+                    let resonance1: Vec2 = b + b - a;
 
-                    map.add_resonance(&resonance0);
-                    map.add_resonance(&resonance1);
+                    if map.contains( &resonance0 ){
+                        resonances.insert( resonance0 );
+                    }
+
+                    if map.contains( &resonance1 ){
+                        resonances.insert( resonance1 );
+                    }
                 }
             }
         }
     }
 
-    // map.print();
+    for pos in resonances.iter() {
+        map.add_resonance(pos);
+    }
 
-    map.count_resonance()
+    resonances.len()
 }
 
 fn do_part2(input: &String) -> usize {
@@ -192,25 +187,24 @@ fn do_part2(input: &String) -> usize {
         }
     }
 
-    // TODO figure out how to not copy here
-    let antennas = map.antennas().clone();
-
-    for (_, points) in antennas {
-        for a in points.iter() {
-            for b in points.iter() {
+    let mut resonances = HashSet::new();
+    
+    for (_, points) in map.antennas() {
+        for &a in points.iter() {
+            for &b in points.iter() {
                 if a != b {
-                    let dir = *a - *b;
-                    let mut pos = *a;
+                    let dir = a - b;
+                    let mut pos = a;
                     while map.contains( &pos ) {
-                        map.add_resonance( &pos );
+                        resonances.insert( pos );
                         pos = pos + dir;
                     }
 
                     
-                    let dir = *b - *a;
-                    let mut pos = *b;
+                    let dir = b - a;
+                    let mut pos = b;
                     while map.contains( &pos ) {
-                        map.add_resonance( &pos );
+                        resonances.insert( pos );
                         pos = pos + dir;
                     }
                 }
@@ -218,7 +212,11 @@ fn do_part2(input: &String) -> usize {
         }
     }
 
-    map.count_resonance()
+    for pos in resonances.iter(){
+        map.add_resonance(pos);
+    }
+
+    resonances.len()
 }
 
 fn main() -> io::Result<()> {
