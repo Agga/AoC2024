@@ -47,3 +47,63 @@ path="day08/main.rs"
 # name="day10"
 # path="day10/main.rs"
 
+# [[bin]]
+# name="day11"
+# path="day11/main.rs"
+
+# [[bin]]
+# name="day12"
+# path="day12/main.rs"
+
+# [[bin]]
+# name="day18"
+# path="day18/main.rs"
+
+# [[bin]]
+# name="day14"
+# path="day14/main.rs"
+
+# [[bin]]
+# name="day15"
+# path="day15/main.rs"
+
+# [[bin]]
+# name="day16"
+# path="day16/main.rs"
+
+# [[bin]]
+# name="day17"
+# path="day17/main.rs"
+
+# [[bin]]
+# name="day18"
+# path="day18/main.rs"
+
+# [[bin]]
+# name="day19"
+# path="day19/main.rs"
+
+# [[bin]]
+# name="day20"
+# path="day20/main.rs"
+
+# [[bin]]
+# name="day21"
+# path="day21/main.rs"
+
+# [[bin]]
+# name="day22"
+# path="day22/main.rs"
+
+# [[bin]]
+# name="day23"
+# path="day23/main.rs"
+
+# [[bin]]
+# name="day24"
+# path="day24/main.rs"
+
+# [[bin]]
+# name="day25"
+# path="day25/main.rs"
+
