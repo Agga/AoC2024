@@ -72,6 +72,7 @@ impl Map {
         }
     }
 
+    #[allow(dead_code)]
     pub fn print(&self) {
         let mut index: usize = 0;
         for _ in 0..self.height {
@@ -224,14 +225,24 @@ fn main() -> io::Result<()> {
     let current_dir = env::current_dir()?;
     println!("Current working directory: {}", current_dir.display());
 
-    let test_input = fs::read_to_string("src/test.txt")?;
-    let input = fs::read_to_string("src/input.txt")?;
-
-    println!("test1 {}", do_part1(&test_input));
-    println!("test2 {}", do_part2(&test_input));
-
+    let input = fs::read_to_string("day08/input.txt")?;
     println!("part1 {}", do_part1(&input));
     println!("part2 {}", do_part2(&input));
 
     Ok(())
+}
+
+#[cfg(test)]
+mod abc{
+    use super::*;
+
+    #[test]
+    fn day08() {
+        println!("Current working directory: {}", env::current_dir().unwrap().display() );
+
+        let input = fs::read_to_string("day08/test.txt").unwrap();
+
+        assert_eq!( 14, do_part1(&input));
+        assert_eq!( 34, do_part2(&input));
+    }
 }
