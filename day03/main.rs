@@ -50,7 +50,7 @@ fn main() -> io::Result<()> {
     let current_dir = env::current_dir()?;
     println!("Current working directory: {}", current_dir.display());
 
-    let input = "src/input.txt";
+    let input = "day03/input.txt";
     let contents = fs::read_to_string(input)?;
 
     println!("part1 {}", do_part1(&contents));

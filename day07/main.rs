@@ -9,6 +9,7 @@ enum Op {
     And,
 }
 
+#[allow(dead_code)]
 fn print_combination(result: usize, arguments: &Vec<usize>, operations: &Vec<Op>) {
     let ops = operations.iter().map(|op| match op {
         Op::Add => "+",
@@ -106,14 +107,25 @@ fn main() -> io::Result<()> {
     let current_dir = env::current_dir()?;
     println!("Current working directory: {}", current_dir.display());
 
-    let test_input = fs::read_to_string("src/test.txt")?;
-    let input = fs::read_to_string("src/input.txt")?;
-
-    println!("test1 {}", do_part1(&test_input));
-    println!("test2 {}", do_part2(&test_input));
+    let input = fs::read_to_string("day07/input.txt")?;
 
     println!("part1 {}", do_part1(&input));
     println!("part2 {}", do_part2(&input));
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests{
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        println!("Current working directory: {}", env::current_dir().unwrap().display() );
+
+        let input = fs::read_to_string("day07/test.txt").unwrap();
+
+        assert_eq!( 3749, do_part1(&input));
+        assert_eq!( 11387, do_part2(&input));
+    }
 }

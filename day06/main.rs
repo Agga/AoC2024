@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::collections::HashSet;
 use std::env;
 use std::fmt;
@@ -220,8 +219,8 @@ fn main() -> io::Result<()> {
     let current_dir = env::current_dir()?;
     println!("Current working directory: {}", current_dir.display());
 
-    let test_input = fs::read_to_string("src/test.txt")?;
-    let input = fs::read_to_string("src/input.txt")?;
+    let test_input = fs::read_to_string("day06/test.txt")?;
+    let input = fs::read_to_string("day06/input.txt")?;
 
     println!("test {}", do_part2(&test_input));
 
