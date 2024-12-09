@@ -130,8 +130,8 @@ fn do_part1(input: &String) -> usize {
             if c != '.' {
                 map.add_antenna(
                     Vec2 {
-                        x: i32::try_from(x).unwrap(),
-                        y: i32::try_from(y).unwrap(),
+                        x: x as i32,
+                        y: y as i32,
                     },
                     c,
                 );
@@ -139,8 +139,37 @@ fn do_part1(input: &String) -> usize {
         }
     }
 
+    // let antenna: Vec<Vec2> = input
+    //     .lines()// loop y
+    //     .enumerate()
+    //     .flat_map(|(y, l)| {
+    //         l.chars() // loop x
+    //             .enumerate()
+    //             .filter(|(_, c)| *c != '.')
+    //             .map(|(x, _)| Vec2 {
+    //                 x: x as i32,
+    //                 y: y as i32,
+    //             })
+    //             .collect::<Vec<_>>()
+    //     })
+    //     .collect();
+
+    // let antenna: Vec<Vec2> = input
+    //     .chars()
+    //     .filter(|&c| !"\r\n".contains(c)) // remove new lines
+    //     .enumerate()
+    //     .filter(|(_, c)| *c != '.') // remove wrong data
+    //     .map(|(i, _)| Vec2 {
+    //         // transform to new type
+    //         x: (i % w) as i32,
+    //         y: (i % w) as i32,
+    //     })
+    //     .collect();
+
+    // println!("{:?}", antenna);
+
     let mut resonances = HashSet::new();
-    
+
     for (_, points) in map.antennas() {
         for &a in points {
             for &b in points {
@@ -148,12 +177,12 @@ fn do_part1(input: &String) -> usize {
                     let resonance0: Vec2 = a + a - b;
                     let resonance1: Vec2 = b + b - a;
 
-                    if map.contains( &resonance0 ){
-                        resonances.insert( resonance0 );
+                    if map.contains(&resonance0) {
+                        resonances.insert(resonance0);
                     }
 
-                    if map.contains( &resonance1 ){
-                        resonances.insert( resonance1 );
+                    if map.contains(&resonance1) {
+                        resonances.insert(resonance1);
                     }
                 }
             }
@@ -188,23 +217,22 @@ fn do_part2(input: &String) -> usize {
     }
 
     let mut resonances = HashSet::new();
-    
+
     for (_, points) in map.antennas() {
         for &a in points.iter() {
             for &b in points.iter() {
                 if a != b {
                     let dir = a - b;
                     let mut pos = a;
-                    while map.contains( &pos ) {
-                        resonances.insert( pos );
+                    while map.contains(&pos) {
+                        resonances.insert(pos);
                         pos = pos + dir;
                     }
 
-                    
                     let dir = b - a;
                     let mut pos = b;
-                    while map.contains( &pos ) {
-                        resonances.insert( pos );
+                    while map.contains(&pos) {
+                        resonances.insert(pos);
                         pos = pos + dir;
                     }
                 }
@@ -212,7 +240,7 @@ fn do_part2(input: &String) -> usize {
         }
     }
 
-    for pos in resonances.iter(){
+    for pos in resonances.iter() {
         map.add_resonance(pos);
     }
 
@@ -231,16 +259,19 @@ fn main() -> io::Result<()> {
 }
 
 #[cfg(test)]
-mod abc{
+mod abc {
     use super::*;
 
     #[test]
     fn day08() {
-        println!("Current working directory: {}", env::current_dir().unwrap().display() );
+        println!(
+            "Current working directory: {}",
+            env::current_dir().unwrap().display()
+        );
 
         let input = fs::read_to_string("day08/test.txt").unwrap();
 
-        assert_eq!( 14, do_part1(&input));
-        assert_eq!( 34, do_part2(&input));
+        assert_eq!(14, do_part1(&input));
+        assert_eq!(34, do_part2(&input));
     }
 }
