@@ -209,5 +209,5 @@ fn part1() {
 
 #[test]
 fn part2() {
-    assert_eq!(0, do_part2(TEST_DATA));
+    assert_eq!(81, do_part2(TEST_DATA));
 }
