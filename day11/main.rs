@@ -54,49 +54,54 @@ pub fn do_part1(input: &str) -> usize {
 
 #[allow(unused_variables)]
 pub fn do_part2(input: &str) -> usize {
-    let mut data: Vec<usize> = input
+    let data: Vec<usize> = input
         .split_whitespace()
         .map(|c| c.parse().unwrap())
         .collect();
 
-    let mut result: Vec<usize> = Vec::new();
+    let mut stones: HashMap<usize, usize> = HashMap::new();
+    for stone in data.iter() {
+        let e = stones.entry(*stone).or_insert(0);
+        *e += 1;
+    }
+
+    let mut next_stones: HashMap<usize, usize> = HashMap::new();
 
     let blinks = 75;
-
-    let mut dict: HashMap<usize, Vec<usize>> = HashMap::new();
-
+    //let mut stones: HashMap<usize, usize> = HashMap::new();
     for n in 0..blinks {
-        for &element in data.iter() {
-            dict.entry(element);
-
+        for (&stone, quantity) in stones.iter() {
             // rule 1
-            if element == 0 {
-                result.push(1);
+            if stone == 0 {
+                *next_stones.entry(1).or_insert(0) += quantity;
                 continue;
             }
 
             // rule 2, even number of digits
-            let mut l = element.to_string();
+            let mut l = stone.to_string();
             if l.len() % 2 == 0 {
                 // is even
                 let r = l.split_off(l.len() / 2);
-                result.push(l.parse().unwrap());
-                result.push(r.parse().unwrap());
+                *next_stones.entry(l.parse().unwrap()).or_insert(0) += quantity;
+                *next_stones.entry(r.parse().unwrap()).or_insert(0) += quantity;
                 continue;
             }
 
-            // count digits + split
-
-            result.push(element * 2024);
+            *next_stones.entry(stone * 2024).or_insert(0) += quantity;
         }
 
-        data = result.clone();
-        result.clear();
+        stones = next_stones;
+        next_stones = HashMap::new();
 
         println!("({}/{}) {}", n + 1, blinks, data.len());
     }
 
-    data.len()
+    let mut count = 0;
+    for (_, &quantity) in stones.iter() {
+        count += quantity;
+    }
+
+    count
 }
 
 fn main() {
