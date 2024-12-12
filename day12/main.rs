@@ -145,20 +145,37 @@ impl Grid {
         self.add_field(&mut region, *pos);
         region.perimeter = region.edges.iter().map(|(_, p)| p.len()).sum();
 
-        for (dir, points) in region.edges.iter() {
-            let mut unique: HashSet<i32> = HashSet::new();
+        for (dir, fields) in region.edges.iter() {
+            let mut edges: HashMap<i32, Vec<i32>> = HashMap::new();
 
-            for p in points {
-                if dir.x == 0 {
-                    unique.insert(p.y);
-                }
-
-                if dir.y == 0 {
-                    unique.insert(p.x);
-                }
+            if dir.x == 0 { // grab all unique y positions
+                edges = fields.iter().fold(HashMap::new(), |mut acc, p| {
+                    acc.entry(p.y).or_default().push(p.x);
+                    acc
+                });
             }
 
-            region.sides += unique.len();
+            if dir.y == 0 { // grab all unique y positions
+                edges = fields.iter().fold(HashMap::new(), |mut acc, p| {
+                    acc.entry(p.x).or_default().push(p.y);
+                    acc
+                });
+            }
+
+            let mut sides = 0;
+
+            for (_, fields) in edges.iter_mut() {
+                fields.sort();
+                let shared_edges: usize = fields
+                    .iter()
+                    .tuple_windows()
+                    .filter(|(&a, &b)| i32::abs(a - b) == 1)
+                    .count();
+
+                sides += fields.len() - shared_edges;
+            }
+
+            region.sides += sides;
         }
         region
     }
@@ -182,10 +199,10 @@ impl Grid {
         for r in regions.iter() {
             let price = r.area * r.perimeter;
 
-            println!(
-                "A region of {} plants with price {} * {} = {}.",
-                r.plant_type, r.area, r.perimeter, price
-            );
+            // println!(
+            //     "A region of {} plants with price {} * {} = {}.",
+            //     r.plant_type, r.area, r.perimeter, price
+            // );
 
             total_price += price;
         }
@@ -212,10 +229,10 @@ impl Grid {
         for r in regions.iter() {
             let price = r.area * r.sides;
 
-            println!(
-                "A region of {} plants with price {} * {} = {}.",
-                r.plant_type, r.area, r.sides, price
-            );
+            // println!(
+            //     "A region of {} plants with price {} * {} = {}.",
+            //     r.plant_type, r.area, r.sides, price
+            // );
 
             total_price += price;
         }
@@ -237,10 +254,8 @@ pub fn do_part2(input: &str) -> usize {
 }
 
 fn main() {
-    //println!("part1 {}", do_part1(INPUT_DATA));
-
-    do_part2(TEST_DATA);
-    // println!("part2 {}", do_part2(INPUT_DATA));
+    println!("part1 {}", do_part1(INPUT_DATA));
+    println!("part2 {}", do_part2(INPUT_DATA));
 }
 
 #[test]
