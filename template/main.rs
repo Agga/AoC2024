@@ -14,8 +14,13 @@ pub fn do_part2(input: &str) -> usize {
 }
 
 fn main() {
+    let mut now = Instant::now();
     println!("part1 {}", do_part1(INPUT_DATA));
+    println!("{:?}", now.elapsed());
+
+    now = Instant::now();
     println!("part2 {}", do_part2(INPUT_DATA));
+    println!("{:?}", now.elapsed());
 }
 
 #[test]
