@@ -276,7 +276,7 @@ impl Grid {
 
 #[allow(unused_variables)]
 pub fn do_part1(input: &str) -> usize {
-    let s = Blub::new(input, |pos, c| (*pos, c));
+    let s = Blub::new(input, |pos, c| (pos, c));
 
     let grid = Grid::new(input);
     grid.part1()
