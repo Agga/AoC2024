@@ -24,6 +24,28 @@ fn do_part2(input: &String) -> i32 {
     let num = Regex::new(r"\d+").unwrap();
 
     let mut action = true;
+    let re = Regex::new(r"do\(\)|don\'t\(\)|mul\((\d+),(\d+)\)").unwrap();
+    let _count: usize = re
+        .captures_iter(input)
+        .filter(|c| {
+            println!("{:?}", c);
+            action = match c.get(0).unwrap().len() {
+                4 => true,
+                7 => false,
+                _ => {
+                    return true;
+                }
+            };
+            false
+        })
+        .map(|c| {
+            let a: usize = c.get(1).unwrap().as_str().parse().unwrap();
+            let b: usize = c.get(2).unwrap().as_str().parse().unwrap();
+            a * b
+        })
+        .sum();
+
+    let mut action = true;
     let mut result = 0;
     for op in bla.find_iter(&input) {
         match op.len() {
