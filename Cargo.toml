@@ -7,6 +7,11 @@ edition = "2021"
 regex="1.4.2"
 itertools = "0.13.0"
 
+[lib]
+name="aoc"
+path="aoc/Vec2.rs"
+crate-type = ["staticlib", "rlib"]
+
 [[bin]]
 name="day01"
 path="day01/main.rs"
@@ -59,9 +64,9 @@ path="day12/main.rs"
 name="day13"
 path="day13/main.rs"
 
-# [[bin]]
-# name="day14"
-# path="day14/main.rs"
+[[bin]]
+name="day14"
+path="day14/main.rs"
 
 # [[bin]]
 # name="day15"

@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 #[allow(dead_code)]
 const INPUT_DATA: &str = include_str!("input.txt");
 #[allow(dead_code)]
