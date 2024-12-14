@@ -58,7 +58,8 @@ pub struct Grid {
     data: Vec<char>,
 }
 
-pub struct Blub<T> {
+#[allow(dead_code)]
+    pub struct Blub<T> {
     width: i32,
     height: i32,
     data: Vec<T>,
