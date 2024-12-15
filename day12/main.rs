@@ -58,38 +58,6 @@ pub struct Grid {
     data: Vec<char>,
 }
 
-#[allow(dead_code)]
-    pub struct Blub<T> {
-    width: i32,
-    height: i32,
-    data: Vec<T>,
-}
-
-impl<T> Blub<T> {
-    pub fn new<F: Fn(Vec2, char) -> T>(input: &str, func: F) -> Self {
-        let mut data: Vec<T> = Vec::new();
-
-        for (y, l) in input.lines().enumerate() {
-            for (x, c) in l.chars().enumerate() {
-                let pos = Vec2 {
-                    x: x as i32,
-                    y: y as i32,
-                };
-                data.push(func(pos, c));
-            }
-        }
-
-        let h = input.lines().count();
-        let w = data.len() / h;
-
-        Blub {
-            width: w as i32,
-            height: h as i32,
-            data: data,
-        }
-    }
-}
-
 const DIRECTIONS: [Vec2; 4] = [
     Vec2 { x: 1, y: 0 },
     Vec2 { x: -1, y: 0 },
@@ -277,8 +245,6 @@ impl Grid {
 
 #[allow(unused_variables)]
 pub fn do_part1(input: &str) -> usize {
-    let s = Blub::new(input, |pos, c| (pos, c));
-
     let grid = Grid::new(input);
     grid.part1()
 }

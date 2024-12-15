@@ -1,7 +1,6 @@
 use regex::Regex;
 use std::{
     collections::HashMap,
-    fs,
     io::{BufWriter, Write},
     time::Instant,
 };

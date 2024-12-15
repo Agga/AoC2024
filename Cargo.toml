@@ -10,7 +10,7 @@ itertools = "0.13.0"
 [lib]
 name="aoc"
 path="aoc/Vec2.rs"
-crate-type = ["staticlib", "rlib"]
+# crate-type = ["staticlib", "rlib"]
 
 [[bin]]
 name="day01"
@@ -68,9 +68,9 @@ path="day13/main.rs"
 name="day14"
 path="day14/main.rs"
 
-# [[bin]]
-# name="day15"
-# path="day15/main.rs"
+[[bin]]
+name="day15"
+path="day15/main.rs"
 
 # [[bin]]
 # name="day16"
